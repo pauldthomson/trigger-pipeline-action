@@ -32,7 +32,7 @@ function get_github_env_json() {
     jq -c -n \
       --arg GITHUB_REPOSITORY "$GITHUB_REPOSITORY" \
       --arg SOURCE_REPO_SHA "$GITHUB_SHA" \
-      --arg SOURCE_REPO_REF "${GITHUB_REF#"refs/heads/"}" \
+      --arg SOURCE_REPO_REF "${GITHUB_REF##*/}" \
       '{
         GITHUB_REPOSITORY: $GITHUB_REPOSITORY,
         SOURCE_REPO_SHA: $SOURCE_REPO_SHA,
@@ -66,7 +66,7 @@ ORG_SLUG=$(echo "${PIPELINE}" | cut -d'/' -f1)
 PIPELINE_SLUG=$(echo "${PIPELINE}" | cut -d'/' -f2)
 
 COMMIT="${COMMIT:-${GITHUB_SHA}}"
-BRANCH="${BRANCH:-${GITHUB_REF#"refs/heads/"}}"
+BRANCH="${BRANCH:-${GITHUB_REF##*/}}"
 MESSAGE="${MESSAGE:-}"
 
 NAME=$(jq -r ".pusher.name" "$GITHUB_EVENT_PATH")
